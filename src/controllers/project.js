@@ -3,7 +3,7 @@ var user = require('../model/user')
 
 /* get projects */
 router.get('/', function (req, res) {
-    res.status(201).json({code: 0});
+    res.status(200).json({code: 0});
 });
 /* create a project */
 router.post('/', function (req, res) {

@@ -15,12 +15,14 @@ module.exports = function (req, res, next) {
                     .then(function () {
                         // user authenticated
                         req.user = userObj;
-                        if (req.url.startsWith("/v1/project") || req.url.startsWith("/v1/task-type")) {
+                        if (req.url.startsWith("/v1/project") || req.url.startsWith("/v1/task-type") || (req.url==='/v1/user/register')) {
                             // TODO: Admin authorization
                             next();
                             return;
                         } else if (req.url.startsWith("/v1/task")) {
                             // TODO: Project authorization - validate that user has access to project
+                            next();
+                            return;
                         } else {
                             next();
                             return;

@@ -19,7 +19,6 @@ module.exports.get = function () {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection('task-types').find().toArray(function (err, result) {
-            console.log(result);
             if (err) reject({err})
             else resolve(result)
           })

@@ -5,7 +5,7 @@ var taskType = require('../model/task-type')
 router.get('/', function (req, res) {
     taskType.get()
         .then(function (taskTypes) {
-            res.status(201).json({ code: 0, taskTypes });
+            res.status(200).json({ code: 0, taskTypes });
         })
         .catch(function (error) {
             res.status(500).json({ code: -1, error });

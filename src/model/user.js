@@ -63,15 +63,25 @@ module.exports.authenticate = function (userId) {
             })
     });
 }
-
+/* get users */
+module.exports.get = function () {
+    return new Promise(function (resolve, reject) {
+        var db = mongo.db();
+        db.collection('users').find({type: "member"},{projection: {_id: true, username: true}}).toArray(function (err, result) {
+            if (err) reject({err})
+            else resolve(result)
+          })
+    });
+}
 /* user register */
 module.exports.register = function (name, email) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         //TODO: generate password
-        var password = 'newpassword';
+        var password = encHelper.encrypt('newpassword');
+        var type = 'member';
         db.collection("users")
-            .insertOne({ name, email, password })
+            .insertOne({ name, email, password, type })
             .then(function ({ insertedCount }) {
                 if (insertedCount === 1) {
                     // TODO: send email
