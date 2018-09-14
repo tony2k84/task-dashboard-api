@@ -17,6 +17,8 @@ module.exports = function (req, res, next) {
                         req.user = userObj;
                         if (req.url.startsWith("/v1/project") || req.url.startsWith("/v1/task-type")) {
                             // TODO: Admin authorization
+                            next();
+                            return;
                         } else if (req.url.startsWith("/v1/task")) {
                             // TODO: Project authorization - validate that user has access to project
                         } else {

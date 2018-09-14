@@ -71,7 +71,7 @@ module.exports.register = function (name, email) {
         //TODO: generate password
         var password = 'newpassword';
         db.collection("users")
-            .find({ name, email, password })
+            .insertOne({ name, email, password })
             .then(function ({ insertedCount }) {
                 if (insertedCount === 1) {
                     // TODO: send email
