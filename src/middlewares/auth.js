@@ -63,7 +63,7 @@ module.exports.checkAdmin = function (req, res, next) {
 module.exports.checkProjectAccess = function (req, res, next) {
     user.get(req.user.id)
         .then(function (users) {
-            if(_.findIndex(users[0].projects, ['id', req.query.projectId]) !== -1){
+            if(_.findIndex(users[0].members, ['projectId', req.body.projectId]) !== -1){
                 // found
                 next();
                 return;
