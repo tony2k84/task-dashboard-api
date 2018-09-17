@@ -1,8 +1,9 @@
 var jwt = require('jsonwebtoken');
 var config = require('../config/config.js');
 var user = require('../model/user');
+var _ = require('lodash');
 
-module.exports = function (req, res, next) {
+module.exports.authentication = function (req, res, next) {
     if (req.url === '/v1/user/login') {
         next();
         return;
@@ -15,19 +16,8 @@ module.exports = function (req, res, next) {
                     .then(function () {
                         // user authenticated
                         req.user = userObj;
-                        if (req.url.startsWith("/v1/project") || req.url.startsWith("/v1/task-type") || (req.url==='/v1/user/register')) {
-                            // TODO: Admin authorization
-                            next();
-                            return;
-                        } else if (req.url.startsWith("/v1/task")) {
-                            // TODO: Project authorization - validate that user has access to project
-                            next();
-                            return;
-                        } else {
-                            next();
-                            return;
-                        }
-
+                        next();
+                        return;
                     })
                     .catch(function (error) {
                         return res.status(401).json({
@@ -52,3 +42,37 @@ module.exports = function (req, res, next) {
         }
     }
 };
+
+module.exports.checkAdmin = function (req, res, next) {
+    user.get(req.user.id)
+        .then(function (users) {
+            if (users[0].type === 'admin') {
+                next();
+                return;
+            } else {
+                return res.status(401).json({
+                    error: {
+                        msg: 'Only Admin can add projects to users.'
+                    }
+                });
+            }
+        })
+
+}
+
+module.exports.checkProjectAccess = function (req, res, next) {
+    user.get(req.user.id)
+        .then(function (users) {
+            if(_.findIndex(users[0].projects, ['id', req.query.projectId]) !== -1){
+                // found
+                next();
+                return;
+            }else{
+                return res.status(401).json({
+                    error: {
+                        msg: 'User doesnot have access to the project'
+                    }
+                });
+            }            
+        })
+}

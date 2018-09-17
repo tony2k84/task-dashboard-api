@@ -9,13 +9,14 @@ var express = require('express')
     , https = require('https')
     , privateKey  = fs.readFileSync('./src/config/9883630_task-dashboard-api.key', 'utf8')
     , certificate = fs.readFileSync('./src/config/9883630_task-dashboard-api.cert', 'utf8')
-    , credentials = {key: privateKey, cert: certificate};
+    , credentials = {key: privateKey, cert: certificate}
+    , auth = require('./middlewares/auth');
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(require('./middlewares/auth.js'));
+app.use(auth.authentication);
 
 app.use(require('./controllers'));
 

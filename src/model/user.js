@@ -5,11 +5,11 @@ var encHelper = require('../helpers/encryption-helper');
 var ObjectId = require('mongodb').ObjectId;
 
 /* user login */
-module.exports.login = function (username, password) {
+module.exports.login = function (email, password) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection("users")
-            .findOne({ username: username, password: encHelper.encrypt(password) })
+            .findOne({ email: email, password: encHelper.encrypt(password) }, { projection: { password: false } })
             .then(function (user) {
                 module.exports.logout(user._id)
                     .then(function () {
@@ -20,8 +20,8 @@ module.exports.login = function (username, password) {
                                     // generate JWT
                                     var token = jwt.sign({
                                         id: user._id,
-                                    }, config.JWT_SECRET, { expiresIn: 60 * 60 });
-                                    resolve({ token })
+                                    }, config.JWT_SECRET, {});
+                                    resolve({ token, user })
                                 }
                             })
                     }).catch(function (error) {
@@ -64,13 +64,22 @@ module.exports.authenticate = function (userId) {
     });
 }
 /* get users */
-module.exports.get = function () {
+module.exports.get = function (userId = null, type = null) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        db.collection('users').find({type: "member"},{projection: {_id: true, username: true}}).toArray(function (err, result) {
-            if (err) reject({err})
+        var query = null;
+        if (userId === null) {
+            query = { type }
+        } else {
+            if (type === null)
+                query = { _id: new ObjectId(userId) }
+            else
+                query = { _id: new ObjectId(userId), type }
+        }
+        db.collection('users').find(query, { projection: { password: false } }).toArray(function (err, result) {
+            if (err) reject({ err })
             else resolve(result)
-          })
+        })
     });
 }
 /* user register */
@@ -92,37 +101,20 @@ module.exports.register = function (name, email) {
 }
 
 /* user add project */
-module.exports.addProject = function (userId, project) {
-    return new Promise(function (resolve, reject) {
-        var db = mongo.db();
-        //TODO: generate password
-        var password = 'newpassword';
-        db.collection("users")
-            .updateOne(
-                { _id: new ObjectId(userId) },
-                { $addToSet: { projects: project } })
-            .then(function ({ matchedCount }) {
-                if (matchedCount === 1)
-                    resolve({})
-                else
-                    reject({})
-            })
-    });
-}
-
-/* user add project */
-module.exports.removeProject = function (userId, project) {
+module.exports.addProject = function (projectId, name, email) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection("users")
-            .updateOne(
-                { _id: new ObjectId(userId) },
-                { $pull: { projects: project } })
-            .then(function ({ matchedCount }) {
-                if (matchedCount === 1)
-                    resolve({})
-                else
-                    reject({})
+            .findOneAndUpdate(
+                { email: email },
+                { $addToSet: { members: { projectId, name } } },
+                { returnNewDocument: true, projection: {name: true, email: true}})
+            .then(function (user) {
+                if(user && user.value){
+                    resolve(user.value);
+                }else{
+                    reject({error: {msg: 'update failed'}})
+                }
             })
     });
 }

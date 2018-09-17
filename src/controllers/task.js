@@ -1,5 +1,9 @@
 var router = require('express').Router()
 var task = require('../model/task')
+var auth = require('../middlewares/auth');
+
+// middleware
+router.use(auth.checkProjectAccess);
 
 /* get tasks */
 router.get('/', function (req, res) {
@@ -34,5 +38,6 @@ router.post('/complete', function (req, res) {
             res.status(500).json({ code: -1, error });
         })
 });
+
 
 module.exports = router
