@@ -6,8 +6,8 @@ var auth = require('../middlewares/auth');
 router.use(auth.checkProjectAccess);
 
 /* get tasks */
-router.get('/', function (req, res) {
-    task.get()
+router.post('/', function (req, res) {
+    task.get(req.body.projectId)
         .then(function (tasks) {
             res.status(200).json({ code: 0, tasks });
         })
@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
         })
 });
 /* create task */
-router.post('/', function (req, res) {
+router.post('/add', function (req, res) {
     const { projectId, type, group, nextRun, owner } = req.body;
     task.add(projectId, type, group, nextRun, owner)
         .then(function () {

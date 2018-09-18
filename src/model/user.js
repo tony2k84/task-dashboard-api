@@ -95,7 +95,6 @@ module.exports.register = function (name, email, password, type='member') {
                 return project.add(`${name}'s Project`, name, email)
             })
             .then(function ({projectId}){
-                console.log('id',projectId)
                 return module.exports.addProject(projectId, `${name}'s Project`, email)
             })
             .catch(function (err){

@@ -16,10 +16,10 @@ module.exports.add = function (projectId, type, group, nextRun, owner) {
 }
 
 /* get task */
-module.exports.get = function () {
+module.exports.get = function (projectId) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        db.collection('tasks').find().toArray(function (err, result) {
+        db.collection('tasks').find({projectId}).toArray(function (err, result) {
             if (err) reject({ err })
             else resolve(result)
         })

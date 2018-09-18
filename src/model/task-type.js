@@ -5,7 +5,7 @@ module.exports.add = function (type) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection("task-types")
-            .updateOne({ type }, { $set: { type } }, { upsert: true })
+            .updateOne({ type }, { $set: { value: type, text: type, type } }, { upsert: true })
             .then(function ({ matchedCount }) {
                 if (matchedCount === 1)
                     resolve({})

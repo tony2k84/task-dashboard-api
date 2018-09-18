@@ -46,7 +46,6 @@ module.exports.authentication = function (req, res, next) {
 module.exports.checkAdmin = function (req, res, next) {
     user.get(req.user.id)
         .then(function (users) {
-            console.log(users[0]);
             if (users[0].type === 'admin') {
                 next();
                 return;
@@ -64,7 +63,10 @@ module.exports.checkAdmin = function (req, res, next) {
 module.exports.checkProjectAccess = function (req, res, next) {
     user.get(req.user.id)
         .then(function (users) {
-            if(_.findIndex(users[0].members, ['projectId', req.body.projectId]) !== -1){
+            const isProjectAuthorized = _.findIndex(users[0].members, function(o) { 
+                return o.projectId.toString() == req.body.projectId; 
+            });
+            if(isProjectAuthorized !== -1){
                 // found
                 next();
                 return;

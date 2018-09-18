@@ -8,8 +8,8 @@ module.exports.init = function () {
         function (err, client) {
             if (err) reject({err})
             db = client.db('task-dashboard'); 
-            init.users();
-            init.taskTypes();
+            //init.users();
+            //init.taskTypes();
             resolve({})
         })
         
