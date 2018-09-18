@@ -12,9 +12,9 @@ router.post('/login', function (req, res) {
     })
 });
 /* register */
-router.post('/register', auth.checkAdmin, function (req, res) {
-    const { name, email } = req.body;
-    user.register(name, email).then(function () {
+router.post('/register', function (req, res) {
+    const { name, email, password } = req.body;
+    user.register(name, email, password).then(function () {
         res.status(201).json({ code: 0 });
     }).catch(function (error) {
         res.status(401).json({ code: -1, error });

@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 var encHelper = require('../helpers/encryption-helper');
 var ObjectId = require('mongodb').ObjectId;
+var project = require('./project');
 
 /* user login */
 module.exports.login = function (email, password) {
@@ -83,19 +84,22 @@ module.exports.get = function (userId = null, type = null) {
     });
 }
 /* user register */
-module.exports.register = function (name, email) {
+module.exports.register = function (name, email, password, type='member') {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        //TODO: generate password
-        var password = encHelper.encrypt('newpassword');
-        var type = 'member';
-        db.collection("users")
-            .insertOne({ name, email, password, type })
-            .then(function ({ insertedCount }) {
-                if (insertedCount === 1) {
-                    // TODO: send email
-                    resolve({})
-                }
+        // create a new
+        db.collection('users')
+            .updateOne({email}, { $set: {name, email, password: encHelper.encrypt(password), type}}, {upsert: true})
+            .then(function () {
+                // add a personal project for this
+                return project.add(`${name}'s Project`, name, email)
+            })
+            .then(function ({projectId}){
+                console.log('id',projectId)
+                return module.exports.addProject(projectId, `${name}'s Project`, email)
+            })
+            .catch(function (err){
+                console.log('user.register.error',err);
             })
     });
 }

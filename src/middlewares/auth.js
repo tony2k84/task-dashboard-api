@@ -46,13 +46,14 @@ module.exports.authentication = function (req, res, next) {
 module.exports.checkAdmin = function (req, res, next) {
     user.get(req.user.id)
         .then(function (users) {
+            console.log(users[0]);
             if (users[0].type === 'admin') {
                 next();
                 return;
             } else {
                 return res.status(401).json({
                     error: {
-                        msg: 'Only Admin can add projects to users.'
+                        msg: 'admin access required'
                     }
                 });
             }
