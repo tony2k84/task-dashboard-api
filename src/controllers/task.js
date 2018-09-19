@@ -28,8 +28,8 @@ router.post('/add', function (req, res) {
 });
 /* complete task */
 router.post('/complete', function (req, res) {
-    const { id, lastRun, nextRun } = req.body;
-    task.complete(id, lastRun, nextRun)
+    const { taskId, lastRun, nextRun } = req.body;
+    task.complete(taskId, lastRun, nextRun)
         .then(function () {
             res.status(200).json({ code: 0 });
         })
