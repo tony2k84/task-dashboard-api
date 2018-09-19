@@ -17,8 +17,8 @@ router.post('/', function (req, res) {
 });
 /* create task */
 router.post('/add', function (req, res) {
-    const { projectId, type, group, nextRun, owner } = req.body;
-    task.add(projectId, type, group, nextRun, owner)
+    const { projectId, type, group, description, nextRun, owner } = req.body;
+    task.add(projectId, type, group, description, nextRun, owner)
         .then(function () {
             res.status(201).json({ code: 0 });
         })

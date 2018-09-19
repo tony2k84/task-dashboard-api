@@ -2,11 +2,11 @@ var mongo = require('../mongo');
 var ObjectId = require('mongodb').ObjectId;
 
 /* add task */
-module.exports.add = function (projectId, type, group, nextRun, owner) {
+module.exports.add = function (projectId, type, group, description, nextRun, owner) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection("tasks")
-            .insertOne({ projectId, type, group, nextRun, owner })
+            .insertOne({ projectId, type, group, description, nextRun, owner })
             .then(function ({ insertedCount }) {
                 if (insertedCount === 1) {
                     resolve({})
