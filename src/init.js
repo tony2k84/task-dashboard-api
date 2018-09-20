@@ -9,6 +9,6 @@ module.exports.users = function(){
 
 module.exports.taskTypes = function(){
     console.log('initializing task types started')
-    taskType.add('Default');
+    taskType.add('Standard');
     console.log('initializing task types completed')
 }
