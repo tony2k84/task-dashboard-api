@@ -19,7 +19,7 @@ module.exports.add = function (projectId, type, group, description, nextRun, own
 module.exports.get = function (projectId) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        db.collection('tasks').find({projectId}).toArray(function (err, result) {
+        db.collection('tasks').find({projectId, nextRun: {$ne: null}}).toArray(function (err, result) {
             if (err) reject({ err })
             else resolve(result)
         })
