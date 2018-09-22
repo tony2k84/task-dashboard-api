@@ -83,6 +83,20 @@ module.exports.get = function (userId = null, type = null) {
         })
     });
 }
+
+/* get users */
+module.exports.getByEmail = function (email) {
+    return new Promise(function (resolve, reject) {
+        var db = mongo.db();
+        var query = {email};
+        db.collection('users').findOne(query, { projection: { password: false } })
+        .then(function (user){
+            resolve({user})
+        }).catch(function (err){
+            reject({err});
+        });
+    });
+}
 /* user register */
 module.exports.register = function (name, email, password, type='member') {
     return new Promise(function (resolve, reject) {
