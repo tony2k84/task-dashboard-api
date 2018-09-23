@@ -9,7 +9,7 @@ module.exports.login = function (email, password) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         db.collection("users")
-            .findOne({ email: email, password: encHelper.encrypt(password) }, { projection: { password: false } })
+            .findOne({ email: email, password: encHelper.encrypt(password), enabled: true }, { projection: { password: false } })
             .then(function (user) {
                 module.exports.logout(user._id)
                     .then(function () {
@@ -102,7 +102,7 @@ module.exports.register = function (name, email, password, type='member') {
         var db = mongo.db();
         // create a new
         db.collection('users')
-            .updateOne({email}, { $set: {name, email, password: encHelper.encrypt(password), type}}, {upsert: true})
+            .insertOne({name, email, password: encHelper.encrypt(password), type, enabled: false})
             .then(function () {
                 // add a personal project for this
                 return project.add(`${name}'s Project`, name, email)

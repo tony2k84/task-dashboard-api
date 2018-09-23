@@ -14,8 +14,7 @@ module.exports.init = function () {
             //init.users();
             //init.taskTypes();
             resolve({})
-        })
-        
+        })          
     });
 };
 
