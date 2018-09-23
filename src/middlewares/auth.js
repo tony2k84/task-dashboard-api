@@ -1,5 +1,4 @@
 var jwt = require('jsonwebtoken');
-var config = require('../config/config.js');
 var user = require('../model/user');
 var _ = require('lodash');
 
@@ -11,7 +10,7 @@ module.exports.authentication = function (req, res, next) {
     else {
         if (req.hasOwnProperty('headers') && req.headers.hasOwnProperty('authorization')) {
             try {
-                var userObj = jwt.verify(req.headers['authorization'], config.JWT_SECRET);
+                var userObj = jwt.verify(req.headers['authorization'], process.env.JWT_SECRET);
                 user.authenticate(userObj.id)
                     .then(function () {
                         // user authenticated

@@ -2,7 +2,6 @@ var express = require('express')
     , app = express()
     , bodyParser = require('body-parser')
     , app = express()
-    , config = require('./config/config')
     , cors = require('cors')
     , fs = require('fs')
     , http = require('http')
@@ -24,22 +23,3 @@ app.use(require('./controllers'));
 mongo.init().then(function () {
     app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
 });
-
-/*
-var httpServer = http.createServer(app)
-var httpsServer = https.createServer(credentials, app)
-
-if (config.MODE === 'HTTP' || config.MODE === 'BOTH') {
-    mongo.init().then(function () {
-        httpServer.listen(config.HTTP_PORT, function () {
-            console.log('http server running on port:', config.HTTP_PORT)
-        });
-    });
-}
-if (config.MODE === 'HTTPS' || config.MODE === 'BOTH') {
-    mongo.init().then(function () {
-        httpsServer.listen(config.HTTPS_PORT, function () {
-            console.log('https server listening on port:', config.HTTPS_PORT)
-        });
-    });
-}*/ 

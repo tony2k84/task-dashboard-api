@@ -1,6 +1,5 @@
 var mongo = require('../mongo');
 var jwt = require('jsonwebtoken');
-var config = require('../config/config');
 var encHelper = require('../helpers/encryption-helper');
 var ObjectId = require('mongodb').ObjectId;
 var project = require('./project');
@@ -21,7 +20,7 @@ module.exports.login = function (email, password) {
                                     // generate JWT
                                     var token = jwt.sign({
                                         id: user._id,
-                                    }, config.JWT_SECRET, {});
+                                    }, process.env.JWT_SECRET, {});
                                     resolve({ token, user })
                                 }
                             })
