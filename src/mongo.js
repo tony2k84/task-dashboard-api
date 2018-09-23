@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var init = require('./init');
+//var init = require('./init');
 var db;
 
 module.exports.init = function () {

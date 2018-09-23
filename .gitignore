@@ -1,3 +1,4 @@
+src/init.js
 node_modules/
 .env
 *.log
