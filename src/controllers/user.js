@@ -14,9 +14,11 @@ router.post('/login', function (req, res) {
 /* register */
 router.post('/register', function (req, res) {
     const { name, email, password } = req.body;
-    user.register(name, email, password).then(function () {
+    user.register(name, email, password)
+    .then(function (user) {
         res.status(201).json({ code: 0 });
-    }).catch(function (error) {
+    }).catch(function (err) {
+        console.log('error', err);
         res.status(401).json({ code: -1, error });
     })
 });

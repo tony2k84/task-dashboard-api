@@ -11,6 +11,7 @@ module.exports.login = function (email, password) {
         db.collection("users")
             .findOne({ email: email, password: encHelper.encrypt(password), enabled: true }, { projection: { password: false } })
             .then(function (user) {
+                if(user === null) {reject({}); return }
                 module.exports.logout(user._id)
                     .then(function () {
                         db.collection("sessions")
@@ -27,7 +28,6 @@ module.exports.login = function (email, password) {
                     }).catch(function (error) {
                         reject({ error })
                     })
-
             })
     });
 }
@@ -102,16 +102,22 @@ module.exports.register = function (name, email, password, type='member') {
         var db = mongo.db();
         // create a new
         db.collection('users')
-            .insertOne({name, email, password: encHelper.encrypt(password), type, enabled: false})
+            .findOneAndUpdate({email}, {$set: {name, email, password: encHelper.encrypt(password), type, enabled: false}}, {upsert: true})
             .then(function () {
                 // add a personal project for this
                 return project.add(`${name}'s Project`, name, email)
             })
             .then(function ({projectId}){
-                return module.exports.addProject(projectId, `${name}'s Project`, email)
+                module.exports.addProject(projectId, `${name}'s Project`, email).then(function (){
+                    resolve({})
+                }).catch(function (err){
+                    console.log('user.register.addProject.error',err);
+                    reject({err});
+                })
             })
             .catch(function (err){
                 console.log('user.register.error',err);
+                reject({err});
             })
     });
 }
@@ -127,8 +133,9 @@ module.exports.addProject = function (projectId, name, email) {
                 { returnNewDocument: true, projection: {name: true, email: true}})
             .then(function (user) {
                 if(user && user.value){
-                    resolve(user.value);
+                    resolve({user: user.value});
                 }else{
+                    console.log('error')
                     reject({error: {msg: 'update failed'}})
                 }
             })

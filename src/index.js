@@ -15,5 +15,5 @@ app.use(auth.authentication);
 
 app.use(require('./controllers'));
 mongo.init().then(function () {
-    app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
+    app.listen(process.env.PORT, () => console.log(`task-dashboard-api listening on port ${process.env.PORT}!`))
 });
