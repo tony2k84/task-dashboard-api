@@ -1,13 +1,14 @@
 var MongoClient = require('mongodb').MongoClient;
 var init = require('./init');
+var config = require('./config/config')
 var db;
 
 module.exports.init = function () {
     return new Promise(function (resolve, reject) {
-        MongoClient.connect('mongodb://admin:admin123@ds261429.mlab.com:61429/task-dashboard', { useNewUrlParser: true },
+        MongoClient.connect(config.MONGO_URI,{ useNewUrlParser: true },
         function (err, client) {
             if (err) reject({err})
-            db = client.db('task-dashboard'); 
+            db = client.db('heroku_xslvtsrc'); 
             //init.users();
             //init.taskTypes();
             resolve({})
