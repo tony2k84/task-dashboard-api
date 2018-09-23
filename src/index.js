@@ -21,6 +21,11 @@ app.use(auth.authentication);
 
 app.use(require('./controllers'));
 
+mongo.init().then(function () {
+    app.listen(process.env.PORT, () => console.log(`Example app listening on port ${process.env.PORT}!`))
+});
+
+/*
 var httpServer = http.createServer(app)
 var httpsServer = https.createServer(credentials, app)
 
@@ -37,4 +42,4 @@ if (config.MODE === 'HTTPS' || config.MODE === 'BOTH') {
             console.log('https server listening on port:', config.HTTPS_PORT)
         });
     });
-} 
+}*/ 
