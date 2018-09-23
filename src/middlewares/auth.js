@@ -3,7 +3,7 @@ var user = require('../model/user');
 var _ = require('lodash');
 
 module.exports.authentication = function (req, res, next) {
-    if (req.url === '/v1/user/login') {
+    if (req.url === '/v1/user/login' || req.url === '/v1/user/register') {
         next();
         return;
     }
