@@ -3,12 +3,6 @@ var express = require('express')
     , bodyParser = require('body-parser')
     , app = express()
     , cors = require('cors')
-    , fs = require('fs')
-    , http = require('http')
-    , https = require('https')
-    , privateKey = fs.readFileSync('./src/config/9883630_task-dashboard-api.key', 'utf8')
-    , certificate = fs.readFileSync('./src/config/9883630_task-dashboard-api.cert', 'utf8')
-    , credentials = { key: privateKey, cert: certificate }
     , auth = require('./middlewares/auth')
     , mongo = require('./mongo')
     
