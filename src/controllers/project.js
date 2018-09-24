@@ -28,7 +28,7 @@ router.post('/', auth.checkAdmin, auth.checkAdmin, function (req, res) {
 router.post('/add-member', auth.checkAdmin, function (req, res) {
     const { projectId, projectName, email } = req.body;
     user.addProject(projectId, projectName, email)
-        .then(function (user) {
+        .then(function ({user}) {
             return project.addMember(projectId, user)
         })
         .then(function (){

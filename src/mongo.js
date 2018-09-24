@@ -12,7 +12,6 @@ module.exports.init = function () {
             }
             db = client.db('heroku_xslvtsrc'); 
             //init.users();
-            //init.taskTypes();
             resolve({})
         })          
     });

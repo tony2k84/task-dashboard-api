@@ -3,7 +3,8 @@ var taskType = require('../model/task-type')
 
 /* get task type */
 router.get('/', function (req, res) {
-    taskType.get()
+    const {projectId} = req.query;
+    taskType.get(projectId)
         .then(function (taskTypes) {
             res.status(200).json({ code: 0, taskTypes });
         })
@@ -13,8 +14,8 @@ router.get('/', function (req, res) {
 });
 /* create task type */
 router.post('/', function (req, res) {
-    const { type } = req.body;
-    taskType.add(type)
+    const { projectId, type } = req.body;
+    taskType.add(projectId, type)
         .then(function () {
             res.status(201).json({ code: 0 });
         })
