@@ -11,7 +11,7 @@ module.exports.login = function (email, password) {
         db.collection("users")
             .findOne({ email: email, password: encHelper.encrypt(password), enabled: true }, { projection: { password: false } })
             .then(function (user) {
-                if(user === null) {reject({}); return }
+                if (user === null) { reject({}); return }
                 module.exports.logout(user._id)
                     .then(function () {
                         db.collection("sessions")
@@ -87,37 +87,28 @@ module.exports.get = function (userId = null, type = null) {
 module.exports.getByEmail = function (email) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        var query = {email};
+        var query = { email };
         db.collection('users').findOne(query, { projection: { password: false } })
-        .then(function (user){
-            resolve({user})
-        }).catch(function (err){
-            reject({err});
-        });
+            .then(function (user) {
+                resolve({ user })
+            }).catch(function (err) {
+                reject({ err });
+            });
     });
 }
 /* user register */
-module.exports.register = function (name, email, password, type='member') {
+module.exports.register = function (name, email, password, type = 'member') {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
         // create a new
         db.collection('users')
-            .findOneAndUpdate({email}, {$set: {name, email, password: encHelper.encrypt(password), type, enabled: false}}, {upsert: true})
+            .findOneAndUpdate({ email }, { $set: { name, email, password: encHelper.encrypt(password), type, enabled: false } }, { upsert: true })
             .then(function () {
-                // add a personal project for this
-                return project.add(`${name}'s Project`, name, email)
+                resolve({})
             })
-            .then(function ({projectId}){
-                module.exports.addProject(projectId, `${name}'s Project`, email).then(function (){
-                    resolve({})
-                }).catch(function (err){
-                    console.log('user.register.addProject.error',err);
-                    reject({err});
-                })
-            })
-            .catch(function (err){
-                console.log('user.register.error',err);
-                reject({err});
+            .catch(function (err) {
+                console.log('user.register.error', err);
+                reject({ err });
             })
     });
 }
@@ -130,13 +121,13 @@ module.exports.addProject = function (projectId, name, email) {
             .findOneAndUpdate(
                 { email: email },
                 { $addToSet: { members: { projectId, name } } },
-                { returnNewDocument: true, projection: {name: true, email: true}})
+                { returnNewDocument: true, projection: { name: true, email: true } })
             .then(function (user) {
-                if(user && user.value){
-                    resolve({user: user.value});
-                }else{
+                if (user && user.value) {
+                    resolve({ user: user.value });
+                } else {
                     console.log('error')
-                    reject({error: {msg: 'update failed'}})
+                    reject({ error: { msg: 'update failed' } })
                 }
             })
     });

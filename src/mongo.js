@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-//var init = require('./init');
+var init = require('./init');
 var db;
 
 module.exports.init = function () {
@@ -11,7 +11,7 @@ module.exports.init = function () {
                 reject({err})
             }
             db = client.db('heroku_xslvtsrc'); 
-            //init.users();
+            init.users();
             resolve({})
         })          
     });
