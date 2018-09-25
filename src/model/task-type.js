@@ -16,7 +16,7 @@ module.exports.add = function (projectId, type) {
 module.exports.get = function (projectId) {
     return new Promise(function (resolve, reject) {
         var db = mongo.db();
-        db.collection('task-types').find({projectId}).toArray(function (err, result) {
+        db.collection('task-types').find({projectId},{projection:{text: true, value: true,}}).toArray(function (err, result) {
             if (err) reject({ err })
             else resolve(result)
         })
